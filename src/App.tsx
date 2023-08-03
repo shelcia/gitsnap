@@ -1,12 +1,39 @@
-import { CssBaseline, CssVarsProvider, Sheet } from "@mui/joy";
+import { CssBaseline, CssVarsProvider, extendTheme } from "@mui/joy";
+// Supports weights 300-900
+import "@fontsource-variable/figtree";
+import "./styles/style.css";
+import { useRoutes } from "react-router-dom";
+import routes from "./routes";
 
-function App() {
+const theme = extendTheme({
+  colorSchemes: {
+    light: {
+      palette: {
+        // affects all Joy components that has `color="primary"` prop.
+        primary: {
+          50: "#fffbeb",
+          100: "#fef3c7",
+          200: "#fde68a",
+          // 300, 400, ..., 800,
+          900: "#78350f",
+        },
+      },
+    },
+  },
+  fontFamily: {
+    display: "Figtree, var(--joy-fontFamily-fallback)",
+    body: "Figtree, var(--joy-fontFamily-fallback)",
+  },
+});
+
+const App = () => {
+  const allPages = useRoutes(routes);
   return (
-    <CssVarsProvider>
+    <CssVarsProvider theme={theme}>
       <CssBaseline />
-      <Sheet variant="outlined">Welcome!</Sheet>
+      {allPages}
     </CssVarsProvider>
   );
-}
+};
 
 export default App;
