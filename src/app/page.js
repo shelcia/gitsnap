@@ -1,3 +1,5 @@
+"use client";
+import React from "react";
 import { GitHub } from "@mui/icons-material";
 import {
   Box,
@@ -9,33 +11,46 @@ import {
   Typography,
 } from "@mui/joy";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
 
-type HomePageProps = object;
-
-const HomePage: React.FC<HomePageProps> = () => {
-  const navigate = useNavigate();
+const HomePage = () => {
+  const router = useRouter();
 
   const [value, setValue] = useState("");
 
   const handleGithubLink = () => {
+    const isGithubLink = value.match(
+      /^(https?:\/\/github\.com\/)?([^/]+)\/([^/]+).*/
+    );
+
+    // if (isGithubLink) {
+    //   toast.error("Add proper github link");
+    //   setValue("");
+    //   return;
+    // }
+
     const parsedLink = value?.split("https://github.com/")?.[1];
     if (parsedLink) {
-      const name = parsedLink.split("/")?.[0];
-      const repo = parsedLink.split("/")?.[1];
+      const [name, repo] = parsedLink.split("/") || [];
 
       if (name && repo) {
-        navigate(`/${name}/${repo}`);
+        router.push(`/${name}/${repo}`);
       } else {
-        navigate(`/error`);
+        toast.error("Add proper github link");
+        setValue("");
+        // router.replace(`/error`);
       }
     } else {
-      navigate(`/error`);
+      toast.error("Add proper github link");
+      setValue("");
+      // router.replace(`/error`);
     }
   };
 
   return (
     <>
+      <Toaster position="top-center" reverseOrder={false} />
       <Card
         variant="soft"
         sx={{
@@ -69,7 +84,7 @@ const HomePage: React.FC<HomePageProps> = () => {
           </CardContent>
           <CardActions buttonFlex="0 1 120px">
             <Button variant="solid" color="primary" onClick={handleGithubLink}>
-              Let's Go !
+              Let&apos;s Go !
             </Button>
           </CardActions>
         </Box>
