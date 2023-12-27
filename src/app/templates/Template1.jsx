@@ -49,7 +49,7 @@ export const Banner1 = ({
           <Chip1
             name="Fork"
             val={forks}
-            color={theme !== "light" ? "#0500FF" : "#0085FF"}
+            color={theme === "light" ? "#0500FF" : "#0085FF"}
             theme={theme}
           />
           <Chip1
