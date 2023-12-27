@@ -15,6 +15,7 @@ import satori from "satori";
 import { Banner1 } from "@/app/templates/Template1";
 import { downloadSvgAsPng } from "@/app/helpers/util";
 import { useParams } from "next/navigation";
+import toast from "react-hot-toast";
 
 const BannerMaker = () => {
   const params = useParams();
@@ -22,6 +23,7 @@ const BannerMaker = () => {
   const repo = params.repo;
 
   const [svgImg, setSvgImg] = useState("");
+  const [generatedSvg, setGeneratedSvg] = useState(null);
   const [details, setDetails] = useState({
     forks: 0,
     open_issues: 0,
@@ -73,7 +75,7 @@ const BannerMaker = () => {
       const width = 1200;
       const height = 460;
 
-      const generatedSvg = await satori(
+      const newGeneratedSvg = await satori(
         <Banner1
           repo={repo}
           theme={inputs.theme}
@@ -108,14 +110,10 @@ const BannerMaker = () => {
         }
       );
 
-      const base64data = btoa(unescape(encodeURIComponent(generatedSvg)));
-      setSvgImg(`data:image/svg+xml;base64,${base64data}`);
+      setGeneratedSvg(newGeneratedSvg)
 
-      if (type === "download") {
-        downloadSvgAsPng(generatedSvg);
-      } else if (type === "svg") {
-        navigator.clipboard.writeText(generatedSvg);
-      }
+      const base64data = btoa(unescape(encodeURIComponent(newGeneratedSvg)));
+      setSvgImg(`data:image/svg+xml;base64,${base64data}`);
     },
     [inputs, disabled]
   );
@@ -128,6 +126,18 @@ const BannerMaker = () => {
   const handleChange = () => {
     generateImage();
   };
+
+
+  const imageSave = (type)=>{
+    if(generatedSvg) {
+      if (type === "download") {
+        downloadSvgAsPng(generatedSvg);
+      } else if (type === "svg") {
+        navigator.clipboard.writeText(generatedSvg);
+        toast.success("Copied as SVG successfully !")
+      }
+    }
+  }
 
 
   return (
@@ -201,13 +211,13 @@ const BannerMaker = () => {
                 </Box>
                 <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
                   <Button
-                    onClick={() => handleChange("download")}
+                    onClick={() => imageSave("download")}
                     disabled={disabled}
                   >
                     Download
                   </Button>
                   <Button
-                    onClick={() => handleChange("svg")}
+                    onClick={() => imageSave("svg")}
                     disabled={disabled}
                   >
                     SVG

@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@mui/joy";
 import { theme } from "./theme";
+import { Toaster } from "react-hot-toast";
 // import { GitHub } from "@mui/icons-material";
 // import Link from "next/link";
 
@@ -22,25 +23,20 @@ export default function RootLayout({ children }) {
       <CssBaseline />
       <html lang="en">
         <body>
-          {/* <ThemeRegistry options={{ key: "joy" }}> */}
+          <Toaster position="top-center" reverseOrder={false} />
           <Sheet variant="soft" sx={{ py: 2, px: 1 }}>
             <Grid container spacing={2} sx={{ flexGrow: 1 }}>
               <Grid xs={8}>
-                <Typography level="h2" fontSize="xl">
+                <Typography level="h1" fontSize="xl">
                   Git Snap
                 </Typography>
               </Grid>
-              {/* <Grid xs={4}>
-                <Link href="https://github.com/shelcia">
-                  <GitHub />
-                </Link>
-              </Grid> */}
             </Grid>
           </Sheet>
           <Sheet
             variant="soft"
             sx={{
-              height: "90vh",
+              minHeight: "85vh",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -48,7 +44,15 @@ export default function RootLayout({ children }) {
           >
             {children}
           </Sheet>
-          {/* </ThemeRegistry> */}
+          <Sheet
+            sx={{ textAlign: "center", minHeight: "5vh", py: 2 }}
+            variant="soft"
+          >
+            Developed by{" "}
+            <a href="www.shelcia-dev.me" target="_blank">
+              Shelcia
+            </a>
+          </Sheet>
         </body>
       </html>
     </CssVarsProvider>

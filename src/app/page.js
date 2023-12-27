@@ -12,7 +12,7 @@ import {
 } from "@mui/joy";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const HomePage = () => {
   const router = useRouter();
@@ -50,7 +50,6 @@ const HomePage = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <Card
         variant="soft"
         sx={{
