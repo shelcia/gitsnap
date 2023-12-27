@@ -39,8 +39,9 @@ export const Banner1 = ({
           style={{
             color: theme === "light" ? "#040404" : "#fff",
             fontFamily: "Satoshi",
-            fontSize: 32,
+            fontSize: description.length > 250 ? 24 : 32,
             fontWeight: 400,
+            textAlign:"center"
           }}
         >
           {description}
