@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -14,10 +14,13 @@ import axios from "axios";
 import satori from "satori";
 import { Banner1 } from "@/app/templates/Template1";
 import { downloadSvgAsPng } from "@/app/helpers/util";
+import { useParams } from "next/navigation";
 
 const BannerMaker = () => {
-  const [, name, repo] = location.pathname.split("/");
-  // console.log(name, repo);
+  const params = useParams();
+  const name = params.name;
+  const repo = params.repo;
+
   const [svgImg, setSvgImg] = useState("");
   const [details, setDetails] = useState({
     forks: 0,
@@ -33,22 +36,23 @@ const BannerMaker = () => {
 
   const [disabled, setDisabled] = useState(true);
 
-  const fetchRepoDetails = (name, repo) => {
-    axios
-      .get(`https://api.github.com/repos/${name}/${repo}`)
-      .then((res) => {
-        // console.log(res);
-        setDetails(res.data);
-        setDisabled(false);
-      })
-      .then(() => {
-        handleChange();
-      });
+  const fetchRepoDetails = async (name, repo) => {
+    try {
+      const res = await axios.get(
+        `https://api.github.com/repos/${name}/${repo}`
+      );
+      setDetails(res.data);
+      setDisabled(false);
+    } catch (error) {
+      console.error("Error fetching repo details", error);
+    }
   };
 
   useEffect(() => {
-    fetchRepoDetails(name, repo);
-  }, [name, repo]);
+    if (name && repo) {
+      fetchRepoDetails(name, repo);
+    }
+  }, [params]);
 
   const satoshiRegular = fetch(
     "/assets/fonts/satoshi/Satoshi-Regular.otf"
@@ -62,65 +66,83 @@ const BannerMaker = () => {
     (res) => res.arrayBuffer()
   );
 
-  const handleChange = async (type) => {
-    const width = 1200;
-    const height = 460;
-    console.log(details);
-    const generatedSvg = await satori(
-      <Banner1
-        repo={repo}
-        // repo={"mocker"}
-        description={details.description}
-        forks={details.forks}
-        issues={details.open_issues}
-        stars={details.stargazers_count}
-      />,
-      {
-        width,
-        height,
-        fonts: [
-          {
-            name: "Satoshi",
-            data: await satoshiRegular,
-            weight: 400,
-            style: "normal",
-          },
-          {
-            name: "Satoshi",
-            data: await satoshiMedium,
-            weight: 500,
-            style: "medium",
-          },
-          {
-            name: "Satoshi",
-            data: await satoshiBold,
-            weight: 700,
-            style: "normal",
-          },
-        ],
-      }
-    );
+  const generateImage = useCallback(
+    async (type) => {
+      if (disabled) return;
 
-    const base64data = btoa(unescape(encodeURIComponent(generatedSvg)));
-    setSvgImg(`data:image/svg+xml;base64,${base64data}`);
-    if (type === "download") {
-      downloadSvgAsPng(generatedSvg);
-    } else if (type === "svg") {
-      navigator.clipboard.writeText(generatedSvg);
-    }
+      const width = 1200;
+      const height = 460;
+
+      const generatedSvg = await satori(
+        <Banner1
+          repo={repo}
+          theme={inputs.theme}
+          description={details.description}
+          forks={details.forks}
+          issues={details.open_issues}
+          stars={details.stargazers_count}
+        />,
+        {
+          width,
+          height,
+          fonts: [
+            {
+              name: "Satoshi",
+              data: await satoshiRegular,
+              weight: 400,
+              style: "normal",
+            },
+            {
+              name: "Satoshi",
+              data: await satoshiMedium,
+              weight: 500,
+              style: "medium",
+            },
+            {
+              name: "Satoshi",
+              data: await satoshiBold,
+              weight: 700,
+              style: "normal",
+            },
+          ],
+        }
+      );
+
+      const base64data = btoa(unescape(encodeURIComponent(generatedSvg)));
+      setSvgImg(`data:image/svg+xml;base64,${base64data}`);
+
+      if (type === "download") {
+        downloadSvgAsPng(generatedSvg);
+      } else if (type === "svg") {
+        navigator.clipboard.writeText(generatedSvg);
+      }
+    },
+    [inputs, disabled]
+  );
+
+
+  useEffect(() => {
+    generateImage();
+  }, [generateImage]);
+
+  const handleChange = () => {
+    generateImage();
   };
+
 
   return (
     <>
       <Grid container spacing={2} sx={{ flexGrow: 1, mt: 1 }}>
         <Grid xs={12} md={8}>
-          <Box>
-            <CardContent sx={{ width: "100%", p: 2 }}>
-              {svgImg !== "" && (
-                <img src={svgImg} alt="" width={"100%"} height="auto" />
-              )}
-            </CardContent>
-          </Box>
+          {!disabled && (
+            <Box>
+              <CardContent sx={{ width: "100%", p: 2 }}>
+                {svgImg !== "" && (
+                  <img src={svgImg} alt="" width={"100%"} height="auto" />
+                )}
+              </CardContent>
+            </Box>
+          )}
         </Grid>
         <Grid xs={12} md={4} sx={{ p: 4 }}>
           <Card variant="soft">
@@ -153,7 +175,6 @@ const BannerMaker = () => {
                     }}
                   >
                     <Option value={1}>Template 1</Option>
-                    {/* <Option value="template-2">Template 2</Option> */}
                   </Select>
                 </Box>
 
@@ -169,12 +190,13 @@ const BannerMaker = () => {
                   <Select
                     defaultValue="light"
                     onChange={(e) => {
-                      setInputs({ ...inputs, theme: e.target.value });
+                      console.log(e.target.id);
+                      setInputs({ ...inputs, theme: e.target.id });
                       handleChange();
                     }}
                   >
-                    <Option value="light">Light Mode</Option>
-                    <Option value="dark">Dark Mode</Option>
+                    <Option value="light" id="light">Light Mode</Option>
+                    <Option value="dark" id="dark">Dark Mode</Option>
                   </Select>
                 </Box>
                 <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
@@ -196,16 +218,13 @@ const BannerMaker = () => {
           </Card>
         </Grid>
       </Grid>
-
-      {/* <Banner
-        repo={"mocker"}
-        description={details.description}
-        forks={details.forks}
-        issues={details.open_issues}
-        stars={details.stargazers_count}
-      /> */}
     </>
   );
 };
 
 export default BannerMaker;
+
+// const fetchFontData = async (fontPath) => {
+//   const response = await fetch(fontPath);
+//   return await response.arrayBuffer();
+// };

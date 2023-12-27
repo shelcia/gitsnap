@@ -46,9 +46,24 @@ export const Banner1 = ({
           {description}
         </p>
         <div style={{ display: "flex", gap: 124, marginTop: 30 }}>
-          <Chip1 name="Fork" val={forks} color="#0500FF" theme={theme} />
-          <Chip1 name="Issues" val={issues} color="#FF005C" theme={theme} />
-          <Chip1 name="Stars" val={stars} color="#FF7A00" theme={theme} />
+          <Chip1
+            name="Fork"
+            val={forks}
+            color={theme !== "light" ? "#0500FF" : "#0085FF"}
+            theme={theme}
+          />
+          <Chip1
+            name="Issues"
+            val={issues}
+            color={theme !== "light" ? "#FF005C" : "#FF005C"}
+            theme={theme}
+          />
+          <Chip1
+            name="Stars"
+            val={stars}
+            color={theme !== "light" ? "#FF7A00" : "#FF7A00"}
+            theme={theme}
+          />
         </div>
       </div>
     </>

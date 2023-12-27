@@ -24,11 +24,17 @@ export const Chip1 = ({ name, val, color, theme = "light" }) => {
       >
         {name}
       </p>
-      <div style={{ width: "1px", height: "39px", background: "#CCC" }}></div>
+      <div
+        style={{
+          width: "1px",
+          height: "39px",
+          background: theme === "light" ? "#CCC" : "rgba(204, 204, 204, 0.40)",
+        }}
+      ></div>
 
       <p
         style={{
-          color: "#000",
+          color: theme === "light" ? "#000" : "#fff",
           fontFamily: "Satoshi",
           fontSize: "20px",
           fontWeight: 400,
