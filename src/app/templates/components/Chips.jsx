@@ -11,7 +11,7 @@ export const Chip1 = ({ name, val, color, theme = "light" }) => {
         boxShadow:
           theme === "light"
             ? "-20px -20px 60px 0px #FFF, 20px 20px 60px 0px rgba(201, 201, 201, 0.60)"
-            : "-20px -20px 60px 0px #0A1D27, 20px 20px 60px 0px #08151D",
+            : "-18px -18px 36px 0px rgba(255, 255, 255, 0.1), 1px 1px 2px 0px rgba(0, 0, 0, 0.02) inset, 18px 18px 36px 0px rgba(0, 0, 0, 0.25)",
       }}
     >
       <p

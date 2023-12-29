@@ -31,7 +31,7 @@ export async function GET(request) {
     const detailsPromise = fetchRepoDetails(name, repo);
 
     const width = 1200;
-    const height = 460;
+    const height = 600;
 
     // Wait for repo details to be fetched
     const details = await detailsPromise;

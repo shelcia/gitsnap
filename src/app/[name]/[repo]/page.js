@@ -5,9 +5,13 @@ import {
   Button,
   Card,
   CardContent,
+  FormControl,
+  FormHelperText,
+  FormLabel,
   Grid,
   Option,
   Select,
+  Switch,
   Typography,
 } from "@mui/joy";
 import axios from "axios";
@@ -73,7 +77,7 @@ const BannerMaker = () => {
       if (disabled) return;
 
       const width = 1200;
-      const height = 460;
+      const height = 600;
 
       const newGeneratedSvg = await satori(
         <Banner1
@@ -110,14 +114,13 @@ const BannerMaker = () => {
         }
       );
 
-      setGeneratedSvg(newGeneratedSvg)
+      setGeneratedSvg(newGeneratedSvg);
 
       const base64data = btoa(unescape(encodeURIComponent(newGeneratedSvg)));
       setSvgImg(`data:image/svg+xml;base64,${base64data}`);
     },
     [inputs, disabled]
   );
-
 
   useEffect(() => {
     generateImage();
@@ -127,18 +130,21 @@ const BannerMaker = () => {
     generateImage();
   };
 
-
-  const imageSave = (type)=>{
-    if(generatedSvg) {
+  const imageSave = (type) => {
+    if (generatedSvg) {
       if (type === "download") {
         downloadSvgAsPng(generatedSvg);
       } else if (type === "svg") {
         navigator.clipboard.writeText(generatedSvg);
-        toast.success("Copied as SVG successfully !")
+        toast.success("Copied as SVG successfully !");
       }
     }
-  }
+  };
 
+  const CopyIcon = "/assets/icons/copy-icon.svg";
+  const DownloadIcon = "/assets/icons/download-icon.svg";
+
+  const [checked, setChecked] = React.useState(false);
 
   return (
     <>
@@ -189,38 +195,62 @@ const BannerMaker = () => {
                 </Box>
 
                 <Box>
-                  <Typography
-                    color="neutral"
-                    level="title-lg"
-                    variant="soft"
-                    sx={{ mb: 1 }}
+                  <FormControl
+                    orientation="horizontal"
+                    sx={{ width: 300, justifyContent: "space-between" }}
                   >
-                    Choose Mode
-                  </Typography>
-                  <Select
-                    defaultValue="light"
-                    onChange={(e) => {
-                      console.log(e.target.id);
-                      setInputs({ ...inputs, theme: e.target.id });
-                      handleChange();
-                    }}
-                  >
-                    <Option value="light" id="light">Light Mode</Option>
-                    <Option value="dark" id="dark">Dark Mode</Option>
-                  </Select>
+                    <div>
+                      <FormLabel>
+                        <Typography
+                          color="neutral"
+                          level="title-lg"
+                          variant="soft"
+                          // sx={{ mb: 1 }}
+                        >
+                          Choose Mode
+                        </Typography>
+                      </FormLabel>
+                      <FormHelperText sx={{ mt: 0 }}>
+                        Switch to Change Theme
+                      </FormHelperText>
+                    </div>
+                    <Switch
+                      checked={checked}
+                      onChange={(event) => {
+                        setChecked(event.target.checked);
+                        setInputs({
+                          ...inputs,
+                          theme: event.target.checked ? "dark" : "light",
+                        });
+                      }}
+                      color={checked ? "primary" : "neutral"}
+                      variant={checked ? "solid" : "outlined"}
+                      endDecorator={checked ? "On" : "Off"}
+                      slotProps={{
+                        endDecorator: {
+                          sx: {
+                            minWidth: 24,
+                          },
+                        },
+                      }}
+                    />
+                  </FormControl>
                 </Box>
                 <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
                   <Button
                     onClick={() => imageSave("download")}
                     disabled={disabled}
                   >
-                    Download
+                    <img
+                      src={DownloadIcon}
+                      alt="icon"
+                      style={{ marginRight: 5 }}
+                    />
+                    Download as PNG
                   </Button>
-                  <Button
-                    onClick={() => imageSave("svg")}
-                    disabled={disabled}
-                  >
-                    SVG
+                  <Button onClick={() => imageSave("svg")} disabled={disabled}>
+                    <img src={CopyIcon} alt="icon" style={{ marginRight: 5 }} />
+                    Copy as SVG
                   </Button>
                 </Box>
               </CardContent>

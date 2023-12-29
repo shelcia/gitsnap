@@ -20,7 +20,7 @@ export const Banner1 = ({
           justifyContent: "center",
           alignItems: "center",
           width: 1200,
-          height: 460,
+          height: 600,
         }}
       >
         <h1
