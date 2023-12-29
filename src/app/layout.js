@@ -4,13 +4,14 @@ import {
   CssBaseline,
   CssVarsProvider,
   Grid,
+  IconButton,
+  Link,
   Sheet,
   Typography,
 } from "@mui/joy";
 import { theme } from "./theme";
 import { Toaster } from "react-hot-toast";
-// import { GitHub } from "@mui/icons-material";
-// import Link from "next/link";
+import { GitHub } from "@mui/icons-material";
 
 export const metadata = {
   title: "GitSnap",
@@ -27,9 +28,18 @@ export default function RootLayout({ children }) {
           <Sheet variant="soft" sx={{ py: 2, px: 1 }}>
             <Grid container spacing={2} sx={{ flexGrow: 1 }}>
               <Grid xs={8}>
-                <Typography level="h1" fontSize="xl">
-                  Git Snap
-                </Typography>
+                <Link href="/" sx={{ textDecoration: "none" }}>
+                  <Typography level="h1" fontSize="xl">
+                    Git Snap
+                  </Typography>
+                </Link>
+              </Grid>
+              <Grid xs={4} sx={{ textAlign: "right" }}>
+                <Link href="https://github.com/shelcia/gitsnap" target="_blank">
+                  <IconButton>
+                    <GitHub />
+                  </IconButton>
+                </Link>
               </Grid>
             </Grid>
           </Sheet>
@@ -49,7 +59,7 @@ export default function RootLayout({ children }) {
             variant="soft"
           >
             Developed by{" "}
-            <a href="www.shelcia-dev.me" target="_blank">
+            <a href="https://www.shelcia-dev.me/" target="_blank">
               Shelcia
             </a>
           </Sheet>

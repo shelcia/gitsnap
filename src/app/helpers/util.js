@@ -19,11 +19,10 @@ export const svgToPngURL = (svg) =>
 
 export const downloadSvgAsPng = async (svg) => {
   const pngURL = await svgToPngURL(svg);
-  console.log(svg);
   try {
     const a = document.createElement("a");
     a.href = pngURL;
-    a.download = "Image.png";
+    a.download = "gitsnap-banner.png";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

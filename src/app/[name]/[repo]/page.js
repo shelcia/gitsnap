@@ -5,6 +5,7 @@ import {
   Button,
   Card,
   CardContent,
+  Checkbox,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -17,9 +18,11 @@ import {
 import axios from "axios";
 import satori from "satori";
 import { Banner1 } from "@/app/templates/Template1";
+import { Banner2 } from "@/app/templates/Template2";
 import { downloadSvgAsPng } from "@/app/helpers/util";
 import { useParams } from "next/navigation";
 import toast from "react-hot-toast";
+import { CopyAll, Download } from "@mui/icons-material";
 
 const BannerMaker = () => {
   const params = useParams();
@@ -41,6 +44,11 @@ const BannerMaker = () => {
   });
 
   const [disabled, setDisabled] = useState(true);
+  const [checked, setChecked] = useState(false);
+
+  const [options, setOptions] = useState({
+    showDescription: true,
+  });
 
   const fetchRepoDetails = async (name, repo) => {
     try {
@@ -79,52 +87,92 @@ const BannerMaker = () => {
       const width = 1200;
       const height = 600;
 
-      const newGeneratedSvg = await satori(
-        <Banner1
-          repo={repo}
-          theme={inputs.theme}
-          description={details.description}
-          forks={details.forks}
-          issues={details.open_issues}
-          stars={details.stargazers_count}
-        />,
-        {
-          width,
-          height,
-          fonts: [
-            {
-              name: "Satoshi",
-              data: await satoshiRegular,
-              weight: 400,
-              style: "normal",
-            },
-            {
-              name: "Satoshi",
-              data: await satoshiMedium,
-              weight: 500,
-              style: "medium",
-            },
-            {
-              name: "Satoshi",
-              data: await satoshiBold,
-              weight: 700,
-              style: "normal",
-            },
-          ],
-        }
-      );
+      let newGeneratedSvg;
+      if (inputs.template === 1) {
+        newGeneratedSvg = await satori(
+          <Banner1
+            repo={repo}
+            theme={inputs.theme}
+            description={details.description}
+            forks={details.forks}
+            issues={details.open_issues}
+            stars={details.stargazers_count}
+            options={options}
+          />,
+          {
+            width,
+            height,
+            fonts: [
+              {
+                name: "Satoshi",
+                data: await satoshiRegular,
+                weight: 400,
+                style: "normal",
+              },
+              {
+                name: "Satoshi",
+                data: await satoshiMedium,
+                weight: 500,
+                style: "medium",
+              },
+              {
+                name: "Satoshi",
+                data: await satoshiBold,
+                weight: 700,
+                style: "normal",
+              },
+            ],
+          }
+        );
+      } else {
+        newGeneratedSvg = await satori(
+          <Banner2
+            repo={repo}
+            theme={inputs.theme}
+            description={details.description}
+            forks={details.forks}
+            issues={details.open_issues}
+            stars={details.stargazers_count}
+            options={options}
+          />,
+          {
+            width,
+            height,
+            fonts: [
+              {
+                name: "Satoshi",
+                data: await satoshiRegular,
+                weight: 400,
+                style: "normal",
+              },
+              {
+                name: "Satoshi",
+                data: await satoshiMedium,
+                weight: 500,
+                style: "medium",
+              },
+              {
+                name: "Satoshi",
+                data: await satoshiBold,
+                weight: 700,
+                style: "normal",
+              },
+            ],
+          }
+        );
+      }
 
       setGeneratedSvg(newGeneratedSvg);
 
       const base64data = btoa(unescape(encodeURIComponent(newGeneratedSvg)));
       setSvgImg(`data:image/svg+xml;base64,${base64data}`);
     },
-    [inputs, disabled]
+    [inputs, disabled, options]
   );
 
   useEffect(() => {
     generateImage();
-  }, [generateImage]);
+  }, [generateImage, inputs]);
 
   const handleChange = () => {
     generateImage();
@@ -140,11 +188,6 @@ const BannerMaker = () => {
       }
     }
   };
-
-  const CopyIcon = "/assets/icons/copy-icon.svg";
-  const DownloadIcon = "/assets/icons/download-icon.svg";
-
-  const [checked, setChecked] = React.useState(false);
 
   return (
     <>
@@ -185,12 +228,13 @@ const BannerMaker = () => {
                   </Typography>
                   <Select
                     defaultValue={1}
-                    onChange={(e) => {
-                      setInputs({ ...inputs, template: e.target.value });
+                    onChange={(event, newValue) => {
+                      setInputs({ ...inputs, template: newValue });
                       handleChange();
                     }}
                   >
                     <Option value={1}>Template 1</Option>
+                    <Option value={2}>Template 2</Option>
                   </Select>
                 </Box>
 
@@ -205,7 +249,6 @@ const BannerMaker = () => {
                           color="neutral"
                           level="title-lg"
                           variant="soft"
-                          // sx={{ mb: 1 }}
                         >
                           Choose Mode
                         </Typography>
@@ -225,7 +268,7 @@ const BannerMaker = () => {
                       }}
                       color={checked ? "primary" : "neutral"}
                       variant={checked ? "solid" : "outlined"}
-                      endDecorator={checked ? "On" : "Off"}
+                      endDecorator={checked ? "Dark" : "Light"}
                       slotProps={{
                         endDecorator: {
                           sx: {
@@ -235,21 +278,31 @@ const BannerMaker = () => {
                       }}
                     />
                   </FormControl>
+                  <Box sx={{ mt: 2 }}>
+                    <Checkbox
+                      color="primary"
+                      label="Show Description"
+                      variant="soft"
+                      checked={options.showDescription}
+                      onChange={() =>
+                        setOptions({
+                          ...options,
+                          showDescription: !options.showDescription,
+                        })
+                      }
+                    />
+                  </Box>
                 </Box>
                 <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
                   <Button
                     onClick={() => imageSave("download")}
                     disabled={disabled}
                   >
-                    <img
-                      src={DownloadIcon}
-                      alt="icon"
-                      style={{ marginRight: 5 }}
-                    />
+                    <Download sx={{ mr: 1 }} />
                     Download as PNG
                   </Button>
                   <Button onClick={() => imageSave("svg")} disabled={disabled}>
-                    <img src={CopyIcon} alt="icon" style={{ marginRight: 5 }} />
+                    <CopyAll sx={{ mr: 1 }} />
                     Copy as SVG
                   </Button>
                 </Box>

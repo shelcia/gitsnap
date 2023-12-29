@@ -45,3 +45,42 @@ export const Chip1 = ({ name, val, color, theme = "light" }) => {
     </div>
   );
 };
+
+export const Chip2 = ({ name, val }) => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        padding: "0px",
+      }}
+    >
+      <p
+        style={{
+          color: "#000",
+          backgroundColor: "#fff",
+          fontFamily: "Satoshi",
+          fontSize: "20px",
+          fontWeight: 500,
+          padding: "16px",
+          boxShadow: "16px 16px 0px #000",
+        }}
+      >
+        {name}
+      </p>
+      <p
+        style={{
+          color: "#fff",
+          backgroundColor: "#000",
+          fontFamily: "Satoshi",
+          fontSize: "20px",
+          fontWeight: 400,
+          padding: "16px",
+          boxShadow: "16px 16px 0px #000",
+        }}
+      >
+        {val}
+      </p>
+    </div>
+  );
+};

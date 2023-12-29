@@ -1,7 +1,7 @@
 import React from "react";
-import { Chip1 } from "./components/Chips";
+import { Chip2 } from "./components/Chips";
 
-export const Banner1 = ({
+export const Banner2 = ({
   repo,
   theme = "light",
   description,
@@ -10,12 +10,15 @@ export const Banner1 = ({
   stars,
   options,
 }) => {
+  const ImgGrid = "/assets/images/img-grid.png";
+
   return (
     <>
       <div
         style={{
-          background: theme === "light" ? "#ECECEC" : "#091922",
-          padding: "8px",
+          backgroundColor: theme === "light" ? "#70FF00" : "#FF2FDE",
+          backgroundImage: `url(${ImgGrid})`,
+          padding: 8,
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -51,24 +54,9 @@ export const Banner1 = ({
         )}
 
         <div style={{ display: "flex", gap: 124, marginTop: 30 }}>
-          <Chip1
-            name="Forks"
-            val={forks}
-            color={theme === "light" ? "#0500FF" : "#0085FF"}
-            theme={theme}
-          />
-          <Chip1
-            name="Issues"
-            val={issues}
-            color={theme !== "light" ? "#FF005C" : "#FF005C"}
-            theme={theme}
-          />
-          <Chip1
-            name="Stars"
-            val={stars}
-            color={theme !== "light" ? "#FF7A00" : "#FF7A00"}
-            theme={theme}
-          />
+          <Chip2 name="Forks" val={forks} />
+          <Chip2 name="Issues" val={issues} />
+          <Chip2 name="Stars" val={stars} />
         </div>
       </div>
     </>
