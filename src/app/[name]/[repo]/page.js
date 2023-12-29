@@ -80,6 +80,17 @@ const BannerMaker = () => {
     (res) => res.arrayBuffer()
   );
 
+  const dmSansLight= fetch("/assets/fonts/dmsans/DMSans-Light.ttf").then(
+    (res) => res.arrayBuffer()
+  );
+
+  const dmSansMedium= fetch("/assets/fonts/dmsans/DMSans-Medium.ttf").then(
+    (res) => res.arrayBuffer()
+  );
+  const dmSanSemiBold= fetch("/assets/fonts/dmsans/DMSans-Bold.ttf").then(
+    (res) => res.arrayBuffer()
+  );
+
   const generateImage = useCallback(
     async (type) => {
       if (disabled) return;
@@ -140,21 +151,21 @@ const BannerMaker = () => {
             height,
             fonts: [
               {
-                name: "Satoshi",
-                data: await satoshiRegular,
+                name: "DM Sans",
+                data: await dmSansLight,
                 weight: 400,
                 style: "normal",
               },
               {
-                name: "Satoshi",
-                data: await satoshiMedium,
+                name: "DM Sans",
+                data: await dmSansMedium,
                 weight: 500,
                 style: "medium",
               },
               {
-                name: "Satoshi",
-                data: await satoshiBold,
-                weight: 700,
+                name: "DM Sans",
+                data: await dmSanSemiBold,
+                weight: 800,
                 style: "normal",
               },
             ],

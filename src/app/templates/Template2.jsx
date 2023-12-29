@@ -31,7 +31,7 @@ export const Banner2 = ({
           style={{
             textTransform: "capitalize",
             color: theme === "light" ? "#040404" : "#fff",
-            fontFamily: "Satoshi",
+            fontFamily: "DM Sans",
             fontSize: 128,
             fontWeight: 700,
             marginBottom: 0,
@@ -43,7 +43,7 @@ export const Banner2 = ({
           <p
             style={{
               color: theme === "light" ? "#040404" : "#fff",
-              fontFamily: "Satoshi",
+              fontFamily: "DM Sans",
               fontSize: description.length > 250 ? 24 : 32,
               fontWeight: 400,
               textAlign: "center",
