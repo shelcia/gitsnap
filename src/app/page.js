@@ -19,7 +19,7 @@ const HomePage = () => {
 
   const [value, setValue] = useState("");
 
-  const handleGithubLink = () => {
+  const handleGithubLink = (e) => {
     const isGithubLink = value.match(
       /^(https?:\/\/github\.com\/)?([^/]+)\/([^/]+).*/
     );
@@ -30,6 +30,7 @@ const HomePage = () => {
     //   return;
     // }
 
+    e.preventDefault()
     const parsedLink = value?.split("https://github.com/")?.[1];
     if (parsedLink) {
       const [name, repo] = parsedLink.split("/") || [];
@@ -60,6 +61,8 @@ const HomePage = () => {
         }}
       >
         <Box
+          component="form"
+          onSubmit={(e)=>handleGithubLink(e)}
           sx={{
             display: "flex",
             justifyContent: "space-between",
@@ -82,7 +85,7 @@ const HomePage = () => {
             />
           </CardContent>
           <CardActions buttonFlex="0 1 120px">
-            <Button variant="solid" color="primary" onClick={handleGithubLink}>
+            <Button variant="solid" color="primary" >
               Let&apos;s Go !
             </Button>
           </CardActions>
